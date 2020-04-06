@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Sensors Data</string>
+    <string name="action_settings">Settings</string>
+    <string name="file_prefix">File prefix:</string>
+    <string name="titleX">x:</string>
+    <string name="titleY">y:</string>
+    <string name="titleZ">z:</string>
+    <string name="titleAccuracy">Accuracy:</string>
+    <string name="titleLatitude">latitude</string>
+    <string name="titleLongitude">longitude</string>
+</resources>
