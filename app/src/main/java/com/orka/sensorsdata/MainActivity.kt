@@ -13,6 +13,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock
 import android.provider.Settings
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -43,62 +44,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var magFilePath: String
     private lateinit var gmsFilePath: String
     private lateinit var orientFilePath: String
+    private lateinit var fullFilePath: String
 
     private var hasAcc = false
     private var hasMag = false
+    private var hasLocation = false
 
     private val accReading = FloatArray(3)
     private val gravityReading = FloatArray(3)
     private val gyroReading = FloatArray(3)
     private val magReading = FloatArray(3)
+    private val orientReading = FloatArray(3)
+    private lateinit var location: Location;
 
     val PERMISSION_ID = 42
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var mLocationCallback: LocationCallback
     private lateinit var mLocationRequest: LocationRequest
-
-    private fun createSensorFile(suffix: String): Boolean {
-
-        val filePath = when (suffix) {
-            "acc" -> {
-                accFilePath = dirPath + filePrefix.text.toString() + "_acc.csv"
-                accFilePath
-            }
-            "gravity" -> {
-                gravityFilePath = dirPath + filePrefix.text.toString() + "_gravity.csv"
-                gravityFilePath
-            }
-            "gyro" -> {
-                gyroFilePath = dirPath + filePrefix.text.toString() + "_gyro.csv"
-                gyroFilePath
-            }
-            "mag" -> {
-                magFilePath = dirPath + filePrefix.text.toString() + "_mag.csv"
-                magFilePath
-            }
-            "orient" -> {
-                orientFilePath = dirPath + filePrefix.text.toString() + "_orient.csv"
-                orientFilePath
-            }
-            "gms" -> {
-                gmsFilePath = dirPath + filePrefix.text.toString() + "_gms.csv"
-                gmsFilePath
-            }
-            else -> "NULL"
-        }
-
-        if (filePath != "NULL") {
-            val file = File(filePath)
-            if (file.exists()) {
-                file.delete()
-            }
-            file.createNewFile()
-            return (true)
-        } else
-            return (false)
-
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +92,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             createSensorFile("mag")
             createSensorFile("gms")
             createSensorFile("orient")
+            createSensorFile("full")
 
             sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL)
             sensorManager.registerListener(this, sensorGravity, SensorManager.SENSOR_DELAY_NORMAL)
@@ -191,6 +154,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 file.appendText(
                     listOf(
                         p0.timestamp.toString(),
+                        NS2TS(p0.timestamp).toString(),
                         accuracy,
                         p0.values[0].toString(),
                         p0.values[1].toString(),
@@ -211,12 +175,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 file.appendText(
                     listOf(
                         p0.timestamp.toString(),
+                        NS2TS(p0.timestamp).toString(),
                         accuracy,
                         p0.values[0].toString(),
                         p0.values[1].toString(),
                         p0.values[2].toString()
                     ).joinToString(separator = ",") + "\n"
                 )
+                fullFile(NS2TS(p0.timestamp), p0.timestamp)
             }
             Sensor.TYPE_GYROSCOPE -> {
                 System.arraycopy(p0.values, 0, gyroReading, 0, gyroReading.size)
@@ -229,12 +195,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 accFile.appendText(
                     listOf(
                         p0.timestamp.toString(),
+                        NS2TS(p0.timestamp).toString(),
                         accuracy,
                         p0.values[0].toString(),
                         p0.values[1].toString(),
                         p0.values[2].toString()
                     ).joinToString(separator = ",") + "\n"
                 )
+                fullFile(NS2TS(p0.timestamp), p0.timestamp)
             }
             Sensor.TYPE_MAGNETIC_FIELD -> {
                 System.arraycopy(p0.values, 0, magReading, 0, magReading.size)
@@ -247,6 +215,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 file.appendText(
                     listOf(
                         p0.timestamp.toString(),
+                        NS2TS(p0.timestamp).toString(),
                         accuracy,
                         p0.values[0].toString(),
                         p0.values[1].toString(),
@@ -279,11 +248,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
 
-        // "mOrientationAngles" now has up-to-date information.
-
+        // "orientationAngles" now has up-to-date information.
+        System.arraycopy(orientationAngles, 0, orientReading, 0, orientReading.size)
         val file = File(orientFilePath)
-        val line = listOf(timestamp.toString()) + orientationAngles.map { it.toString() }
+        val ts = NS2TS(timestamp)
+        val line = listOf(timestamp.toString(), ts.toString()) + orientationAngles.map { it.toString() }
         file.appendText(line.joinToString(separator = ",") + "\n")
+        fullFile(ts, timestamp)
 
         orientAzimuth.text = orientationAngles[0].toString()
         orientPitch.text = orientationAngles[1].toString()
@@ -372,29 +343,105 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
     }
 
-
     private fun createLocationCallback() {
         mLocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
+
                 var mLastLocation: Location = locationResult.lastLocation
                 gmsAccuracy.text = mLastLocation.accuracy.toString()
                 gmsLatitude.text = mLastLocation.latitude.toString()
                 gmsLongitude.text = mLastLocation.longitude.toString()
 
+                hasLocation = true
                 val gmsFile = File(gmsFilePath)
-                for(location in locationResult.locations) {
+                for(loc in locationResult.locations) {
+                    val ns = TS2NS(loc.time)
                     gmsFile.appendText(
                         listOf(
-                            location.time.toString(),
-                            location.accuracy.toString(),
-                            location.latitude.toString(),
-                            location.longitude.toString()
+                            ns.toString(),
+                            loc.time.toString(),
+                            loc.accuracy.toString(),
+                            loc.latitude.toString(),
+                            loc.longitude.toString()
                         ).joinToString(separator = ",") + "\n"
+
                     )
+                    location = loc
+                    fullFile(loc.time.toDouble(), ns)
                 }
+
             }
         }
+    }
+
+    // Utils
+    private fun createSensorFile(suffix: String): Boolean {
+
+        val filePath = when (suffix) {
+            "acc" -> {
+                accFilePath = dirPath + filePrefix.text.toString() + "_acc.csv"
+                accFilePath
+            }
+            "gravity" -> {
+                gravityFilePath = dirPath + filePrefix.text.toString() + "_gravity.csv"
+                gravityFilePath
+            }
+            "gyro" -> {
+                gyroFilePath = dirPath + filePrefix.text.toString() + "_gyro.csv"
+                gyroFilePath
+            }
+            "mag" -> {
+                magFilePath = dirPath + filePrefix.text.toString() + "_mag.csv"
+                magFilePath
+            }
+            "orient" -> {
+                orientFilePath = dirPath + filePrefix.text.toString() + "_orient.csv"
+                orientFilePath
+            }
+            "gms" -> {
+                gmsFilePath = dirPath + filePrefix.text.toString() + "_gms.csv"
+                gmsFilePath
+            }
+            "full" -> {
+                fullFilePath = dirPath + filePrefix.text.toString() + "_full.csv"
+                fullFilePath
+            }
+            else -> "NULL"
+        }
+
+        if (filePath != "NULL") {
+            val file = File(filePath)
+            if (file.exists()) {
+                file.delete()
+            }
+            file.createNewFile()
+            return (true)
+        } else
+            return (false)
+    }
+
+    private fun NS2TS(ns: Long): Double {
+        return System.currentTimeMillis() + (ns - SystemClock.elapsedRealtimeNanos() + 0.0) / 1000000
+    }
+
+    private fun TS2NS(ts: Long): Long {
+        return (ts - System.currentTimeMillis()) * 1000000 + SystemClock.elapsedRealtimeNanos()
+    }
+
+    private fun fullFile(ts: Double, ns: Long) {
+        if(!hasMag || !hasAcc || !hasLocation)
+            return
+
+        val f = File(fullFilePath)
+        val line = listOf(ts.toString(), ns.toString()) +
+                listOf(location.latitude.toString(), location.longitude.toString()) +
+                orientReading.map { it.toString() } +
+                accReading.map { it.toString() } +
+                gravityReading.map { it.toString() } +
+                gyroReading.map { it.toString() } +
+                magReading.map { it.toString() }
+        f.appendText(line.joinToString(separator = ",") + "\n")
     }
 }
 
