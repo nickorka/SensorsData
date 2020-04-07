@@ -1,278 +1,579 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_main"
-        tools:context=".MainActivity">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
 
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
         <LinearLayout
-                android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="true"
+            android:nestedScrollingEnabled="true"
+            android:orientation="vertical">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-        >
-            <TextView
-                    android:text="@string/file_prefix"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/titleFilePrefix"/>
-            <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:text="Name"
-                    android:ems="10"
-                    android:id="@+id/filePrefix" android:layout_weight="1"/>
-        </LinearLayout>
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView
-                    android:text="Rotation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/titleRotation" android:layout_weight="1"/>
-            <TextView
-                    android:text="rotation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/rotation" android:layout_weight="1"/>
-        </LinearLayout>
-        <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-        >
-<!--Accelerometer-->
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:text="Acelerometer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleAccelerometer"
-                        android:layout_column="1"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleAccAccuracy"
-                        android:text="@string/titleAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accAccuracy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/accAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleAccX"
-                        android:text="@string/titleX"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accX"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/accX"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleAccY" android:text="@string/titleY"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/accY"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleAccZ" android:text="@string/titleZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accZ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/accZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <!--Gravity-->
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:text="Gravity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGravity"
-                        android:layout_column="1"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGravityAccuracy"
-                        android:text="@string/titleAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="gravityAccuracy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gravityAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGravityX" android:text="@string/titleX"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accX"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gravityX"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGravityY" android:text="@string/titleY"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gravityY"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGravityZ" android:text="@string/titleZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accZ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gravityZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <!--Gyroscope-->
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:text="Gyroscope"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGyro"
-                        android:layout_column="1"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGyroAccuracy"
-                        android:text="@string/titleAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="gyroAccuracy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gyroAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGyroX" android:text="@string/titleX"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accX"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gyroX"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGyroY" android:text="@string/titleY"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gyroY"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGyroZ" android:text="@string/titleZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accZ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gyroZ"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <!--Fused Location-->
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:text="Fused Location"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGms"
-                        android:layout_column="1"/>
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGmsAccuracy"
-                        android:text="@string/titleAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="gmsAccuracy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gmsAccuracy"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGmsLatitude" android:text="@string/titleLatitude"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accX"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gmsLatitude"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-            <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/titleGmsLongitude" android:text="@string/titleLongitude"
-                        android:layout_margin="5dp"
-                        android:layout_column="2"/>
-                <TextView
-                        android:text="accY"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/gmsLongitude"
-                        android:layout_margin="5dp"
-                        android:layout_column="3"/>
-            </TableRow>
-        </TableLayout>
-    </LinearLayout>
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/titleFilePrefix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/file_prefix" />
+
+                <EditText
+                    android:id="@+id/filePrefix"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="Name" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/titleRotation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Rotation" />
+
+                <TextView
+                    android:id="@+id/rotation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="rotation" />
+            </LinearLayout>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--Accelerometer-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleAccelerometer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Acelerometer" />
+
+                    <TextView
+                        android:id="@+id/titleAccAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleAccuracy" />
+
+                    <TextView
+                        android:id="@+id/accAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accAccuracy" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleAccX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleX" />
+
+                    <TextView
+                        android:id="@+id/accX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accX" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleAccY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleY" />
+
+                    <TextView
+                        android:id="@+id/accY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accY" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleAccZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleZ" />
+
+                    <TextView
+                        android:id="@+id/accZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accZ" />
+                </TableRow>
+                <!--Gravity-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGravity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Gravity" />
+
+                    <TextView
+                        android:id="@+id/titleGravityAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleAccuracy" />
+
+                    <TextView
+                        android:id="@+id/gravityAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="gravityAccuracy" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGravityX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleX" />
+
+                    <TextView
+                        android:id="@+id/gravityX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accX" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGravityY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleY" />
+
+                    <TextView
+                        android:id="@+id/gravityY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accY" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGravityZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleZ" />
+
+                    <TextView
+                        android:id="@+id/gravityZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accZ" />
+                </TableRow>
+                <!--Gyroscope-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGyro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Gyroscope" />
+
+                    <TextView
+                        android:id="@+id/titleGyroAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleAccuracy" />
+
+                    <TextView
+                        android:id="@+id/gyroAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="gyroAccuracy" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGyroX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleX" />
+
+                    <TextView
+                        android:id="@+id/gyroX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accX" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGyroY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleY" />
+
+                    <TextView
+                        android:id="@+id/gyroY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accY" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGyroZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleZ" />
+
+                    <TextView
+                        android:id="@+id/gyroZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accZ" />
+                </TableRow>
+                <!--Magnetic Field-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleMag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Magnetic Field" />
+
+                    <TextView
+                        android:id="@+id/titleMagAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleAccuracy" />
+
+                    <TextView
+                        android:id="@+id/magAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="magAccuracy" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleMagX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleX" />
+
+                    <TextView
+                        android:id="@+id/magX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accX" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleMagY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleY" />
+
+                    <TextView
+                        android:id="@+id/magY"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accY" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleMagZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleZ" />
+
+                    <TextView
+                        android:id="@+id/magZ"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accZ" />
+                </TableRow>
+                <!--Orientation-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleOrient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Orientation" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleOrientX"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="Azimuth" />
+
+                    <TextView
+                        android:id="@+id/orientAzimuth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="azimuth" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleOrientPitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="Pitch" />
+
+                    <TextView
+                        android:id="@+id/orientPitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="pitch" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleOrientRoll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="Roll" />
+
+                    <TextView
+                        android:id="@+id/orientRoll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="roll" />
+                </TableRow>
+                <!--Fused Location-->
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:text="Fused Location" />
+
+                    <TextView
+                        android:id="@+id/titleGmsAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleAccuracy" />
+
+                    <TextView
+                        android:id="@+id/gmsAccuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="gmsAccuracy" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGmsLatitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleLatitude" />
+
+                    <TextView
+                        android:id="@+id/gmsLatitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accX" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/titleGmsLongitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_margin="5dp"
+                        android:text="@string/titleLongitude" />
+
+                    <TextView
+                        android:id="@+id/gmsLongitude"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_margin="5dp"
+                        android:text="accY" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

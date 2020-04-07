@@ -34,11 +34,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var sensorAcc: Sensor
     private lateinit var sensorGravity: Sensor
     private lateinit var sensorGyro: Sensor
+    private lateinit var sensorMag: Sensor
+
     private lateinit var dirPath: String
     private lateinit var accFilePath: String
     private lateinit var gravityFilePath: String
     private lateinit var gyroFilePath: String
+    private lateinit var magFilePath: String
     private lateinit var gmsFilePath: String
+    private lateinit var orientFilePath: String
+
+    private var hasAcc = false
+    private var hasMag = false
+
+    private val accReading = FloatArray(3)
+    private val gravityReading = FloatArray(3)
+    private val gyroReading = FloatArray(3)
+    private val magReading = FloatArray(3)
 
     val PERMISSION_ID = 42
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -59,6 +71,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             "gyro" -> {
                 gyroFilePath = dirPath + filePrefix.text.toString() + "_gyro.csv"
                 gyroFilePath
+            }
+            "mag" -> {
+                magFilePath = dirPath + filePrefix.text.toString() + "_mag.csv"
+                magFilePath
+            }
+            "orient" -> {
+                orientFilePath = dirPath + filePrefix.text.toString() + "_orient.csv"
+                orientFilePath
             }
             "gms" -> {
                 gmsFilePath = dirPath + filePrefix.text.toString() + "_gms.csv"
@@ -86,27 +106,35 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setSupportActionBar(toolbar)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        sensorAcc = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)
+        sensorAcc = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         sensorGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
-        sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED)
+        sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        sensorMag = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         createLocationCallback()
 
+        if(!checkPermissions())
+            requestPermissions()
+
         fabStart.setOnClickListener { view ->
             Snackbar.make(view, "Register Sensors", Snackbar.LENGTH_LONG).show()
 
-            dirPath = getExternalFilesDir("MyFileStorage").absolutePath + "/SensorsData/"
+            dirPath = getExternalFilesDir("MyFileStorage")!!.absolutePath + "/SensorsData/"
             val dir = File(dirPath)
             dir.mkdirs()
             createSensorFile("acc")
             createSensorFile("gravity")
             createSensorFile("gyro")
+            createSensorFile("mag")
             createSensorFile("gms")
+            createSensorFile("orient")
 
             sensorManager.registerListener(this, sensorAcc, SensorManager.SENSOR_DELAY_NORMAL)
             sensorManager.registerListener(this, sensorGravity, SensorManager.SENSOR_DELAY_NORMAL)
             sensorManager.registerListener(this, sensorGyro, SensorManager.SENSOR_DELAY_NORMAL)
+            sensorManager.registerListener(this, sensorMag, SensorManager.SENSOR_DELAY_NORMAL)
 
             requestNewLocationData()
         }
@@ -152,14 +180,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(p0: SensorEvent) {
         val accuracy = getAccuracyString(p0.accuracy)
         when (p0.sensor.type) {
-            Sensor.TYPE_ACCELEROMETER_UNCALIBRATED -> {
+            Sensor.TYPE_ACCELEROMETER -> {
+                System.arraycopy(p0.values, 0, accReading, 0, accReading.size)
                 accAccuracy.setText(accuracy)
                 accX.setText(p0.values[0].toString())
                 accY.setText(p0.values[1].toString())
                 accZ.setText(p0.values[2].toString())
 
-                val accFile = File(accFilePath)
-                accFile.appendText(
+                val file = File(accFilePath)
+                file.appendText(
                     listOf(
                         p0.timestamp.toString(),
                         accuracy,
@@ -168,15 +197,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         p0.values[2].toString()
                     ).joinToString(separator = ",") + "\n"
                 )
+                hasAcc = true
+                updateOrientationAngles(p0.timestamp)
             }
             Sensor.TYPE_GRAVITY -> {
+                System.arraycopy(p0.values, 0, gravityReading, 0, gravityReading.size)
                 gravityAccuracy.setText(accuracy)
                 gravityX.setText(p0.values[0].toString())
                 gravityY.setText(p0.values[1].toString())
                 gravityZ.setText(p0.values[2].toString())
 
-                val accFile = File(gravityFilePath)
-                accFile.appendText(
+                val file = File(gravityFilePath)
+                file.appendText(
                     listOf(
                         p0.timestamp.toString(),
                         accuracy,
@@ -186,7 +218,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     ).joinToString(separator = ",") + "\n"
                 )
             }
-            Sensor.TYPE_GYROSCOPE_UNCALIBRATED -> {
+            Sensor.TYPE_GYROSCOPE -> {
+                System.arraycopy(p0.values, 0, gyroReading, 0, gyroReading.size)
                 gyroAccuracy.setText(accuracy)
                 gyroX.setText(p0.values[0].toString())
                 gyroY.setText(p0.values[1].toString())
@@ -203,7 +236,58 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     ).joinToString(separator = ",") + "\n"
                 )
             }
+            Sensor.TYPE_MAGNETIC_FIELD -> {
+                System.arraycopy(p0.values, 0, magReading, 0, magReading.size)
+                magAccuracy.setText(accuracy)
+                magX.setText(p0.values[0].toString())
+                magY.setText(p0.values[1].toString())
+                magZ.setText(p0.values[2].toString())
+
+                val file = File(magFilePath)
+                file.appendText(
+                    listOf(
+                        p0.timestamp.toString(),
+                        accuracy,
+                        p0.values[0].toString(),
+                        p0.values[1].toString(),
+                        p0.values[2].toString()
+                    ).joinToString(separator = ",") + "\n"
+                )
+                hasMag = true
+                updateOrientationAngles(p0.timestamp)
+            }
         }
+    }
+
+    private val rotationMatrix = FloatArray(9)
+    private val orientationAngles = FloatArray(3)
+
+    // Compute the three orientation angles based on the most recent readings from
+    // the device's accelerometer and magnetometer.
+    fun updateOrientationAngles(timestamp: Long) {
+        if (!hasAcc || !hasMag)
+            return
+        // Update rotation matrix, which is needed to update orientation angles.
+        SensorManager.getRotationMatrix(
+            rotationMatrix,
+            null,
+            accReading,
+            magReading
+        )
+
+        // "mRotationMatrix" now has up-to-date information.
+
+        SensorManager.getOrientation(rotationMatrix, orientationAngles)
+
+        // "mOrientationAngles" now has up-to-date information.
+
+        val file = File(orientFilePath)
+        val line = listOf(timestamp.toString()) + orientationAngles.map { it.toString() }
+        file.appendText(line.joinToString(separator = ",") + "\n")
+
+        orientAzimuth.text = orientationAngles[0].toString()
+        orientPitch.text = orientationAngles[1].toString()
+        orientRoll.text = orientationAngles[2].toString()
     }
 
     /*
@@ -211,9 +295,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
      */
 
     private fun checkPermissions(): Boolean {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-//            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             return true
         }
         return false
